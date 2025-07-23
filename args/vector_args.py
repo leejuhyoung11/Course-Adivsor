@@ -8,5 +8,5 @@ def get_vectorstore_args():
     parser.add_argument("--model_name", type=str, default="sentence-transformers/all-MiniLM-L6-v2", help="HuggingFace embedding model name")
     parser.add_argument("--chunk_size", type=int, default=512, help="Chunk size for splitting")
     parser.add_argument("--chunk_overlap", type=int, default=50, help="Chunk overlap for splitting")
-    parser.add_argument("--save_path", type=str, default="../vectorstore", help="Directory to save FAISS index")
+    parser.add_argument("--save_path", type=str, default="vectorstore", help="Directory to save FAISS index")
     return parser

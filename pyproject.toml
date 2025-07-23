@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "accelerate==1.5.2",
+    "argparse>=1.4.0",
     "bitsandbytes==0.46.1",
     "datasets==3.6.0",
     "huggingface-hub==0.31.1",
@@ -13,10 +14,12 @@ dependencies = [
     "ipython>=7.16.3",
     "ipywidgets>=7.7.1",
     "jupyterlab>=3.0.0",
+    "langchain>=0.3.26",
     "notebook>=6.4.12",
     "numpy==1.26.4",
     "pandas==2.2.3",
     "peft==0.14.0",
+    "pypdf>=5.8.0",
     "pyyaml==6.0.2",
     "safetensors==0.5.3",
     "scikit-learn==1.2.2",

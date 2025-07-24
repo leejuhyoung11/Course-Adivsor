@@ -8,7 +8,7 @@ from args.vector_args import get_vectorstore_args
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.docstore.document import Document
 
 def parse_courses_by_hours_line(text) -> list[Document]:
@@ -44,7 +44,8 @@ def parse_courses_by_hours_line(text) -> list[Document]:
             current_desc = []
 
         else:
-            current_desc.append(line)
+            if current_title:
+                current_desc.append(line)
 
     # Adding Last Element in file
     if current_title:

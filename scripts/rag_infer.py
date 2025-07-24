@@ -42,15 +42,14 @@ def main():
 
     docs = vectorstore.similarity_search(query, k=3)
     
-    print(docs)
-#     context = "\n\n".join([doc.page_content for doc in docs])
-#     prompt = build_prompt(context, query)
+    context = "\n\n".join([doc.page_content for doc in docs])
+    prompt = build_prompt(context, query)
 
-#     print("\n Prompt:\n", prompt)
-#     result = llm_pipe(prompt)[0]["generated_text"]
+    print("\n Prompt:\n", prompt)
+    result = llm_pipe(prompt)[0]["generated_text"]
 
-#     print("\n Mistral's Answer:")
-#     print(result.split("Answer:")[-1].strip())
+    print("\n Mistral's Answer:")
+    print(result.split("Answer:")[-1].strip())
 
 
 if __name__ == "__main__":

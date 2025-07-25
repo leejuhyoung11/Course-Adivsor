@@ -14298,5 +14298,18 @@
     "campus": "No campus, no room needed",
     "status": "99of 99 seats remain.",
     "attribute": "GS Col Socl Sci & HumanitiesFull-time statusNo Course Evaluation"
+  },
+  {
+    "title": "Applied Machine LearningLecture",
+    "subject": "Applied AI - CPS",
+    "course_number": "6610",
+    "section": "01",
+    "credit_hours": "3",
+    "crn": "20858",
+    "term": "Fall 2025 Semester",
+    "meeting_time": "TuesdaySMTWTFS05:50  PM - 07:10  PM Type: Class Building: Richards Hall Room: 237 Start Date: 09/03/2025 End Date: 12/14/2025",
+    "campus": "Boston",
+    "status": "99of 99 seats remain.",
+    "attribute": "GS Col Socl Sci & HumanitiesFull-time statusNo Course Evaluation"
   }
 ]

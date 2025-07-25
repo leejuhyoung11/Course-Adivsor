@@ -58,8 +58,8 @@ def main():
     retriever2 = jsonstore.as_retriever(search_type="mmr")
 
     retrievers = RunnableMap({
-    "course_info": lambda x: retriever1.invoke(x["question"]),
-    "schedule_info": lambda x: retriever2.invoke(x["question"])
+    "course_info": lambda x: retriever1.invoke(str(x["question"])),
+    "schedule_info": lambda x: retriever2.invoke(str(x["question"]))
 })
     
     
@@ -70,7 +70,7 @@ def main():
          "Relevant Course Info:\n{course_info}\n\n"
          "Relevant Schedule Info:\n{schedule_info}"),
         MessagesPlaceholder("chat_history"),
-        ("human", "{question}")
+        ("human", "My question is: {question}\nPlease answer.")
     ])
     
     llm_chain = prompt | llm_pipe 
@@ -84,11 +84,12 @@ def main():
         if user_input.lower() in ["exit", "quit"]:
             print("👋 대화를 종료합니다.")
             break
-    
+
+        
         context_docs = retrievers.invoke({"question": user_input})
         docs_formatted = {
-            "course_info": "\n".join([doc.page_content for doc in context_docs["course_info"]]),
-            "schedule_info": "\n".join([doc.page_content for doc in context_docs["schedule_info"]]),
+            "course_info": "\n".join([str(doc.page_content) for doc in context_docs["course_info"]]),
+            "schedule_info": "\n".join([str(doc.page_content) for doc in context_docs["schedule_info"]]),
         }
     
       
@@ -97,6 +98,7 @@ def main():
         question=user_input,
         **docs_formatted
         )
+        print("✅ LLM response received!")
     
         # LLM pipeline 실행
         response_text = llm_pipe(prompt_text)[0]["generated_text"]

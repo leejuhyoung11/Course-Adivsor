@@ -8,8 +8,8 @@ from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.docstore.document import Document
 
-def format_course_text(course):
-    return f"""{course["title"]}
+def format_course_text(course):    
+    return f"""{course["title"].removesuffix("Lecture").strip()}
 Subject: {course["subject"]}
 Course Number: {course["course_number"]} Section: {course["section"]} ({course["credit_hours"]} credits)
 CRN: {course["crn"]}
@@ -31,7 +31,7 @@ def main():
     Document(
         page_content=format_course_text(course),
         metadata={"course_code": course["course_number"],
-                 "course_title": course["title"]}
+                 "course_title": course["title"].removesuffix("Lecture").strip()}
         )
         for course in course_data
     ]

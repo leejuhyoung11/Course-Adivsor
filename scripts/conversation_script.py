@@ -11,7 +11,7 @@ from utils.hf_auth import hf_login_from_env
 from args.vector_args import get_path_args
 
 from langchain.schema import HumanMessage, AIMessage
-from langchain_core.runnables import RunnableParallel
+from langchain_core.runnables import RunnableParallel, RunnableLambda, RunnableSequence
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableMap
 
@@ -52,19 +52,43 @@ def main():
 
     print("Loading vector store...")
     vectorstore = load_vectorstore(pdf_vector_path, embedding_model)
-    retriever1 = vectorstore.as_retriever(search_type="mmr")
+    retriever1 = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 7})
 
-    print(retriever1.invoke("Course related to Algorigthm"))
-
+    
     jsonstore = load_jsonstore(json_vector_path, embedding_model)
     retriever2 = jsonstore.as_retriever(search_type="mmr")
 
-    print(retriever2.invoke("Course related to Algorigthm"))
+
+    def first_step(query):
+        docs = retriever1.invoke(query)
+        allowed_courses = [doc.metadata["course_title"] for doc in docs]
+        print(f"allowedcourse : {allowed_courses}")
+        return {"docs": docs, "allowed_courses": allowed_courses, "query":query}
+
+    def second_step(data):
+        query = data["query"]
+        print(f"query : {query}")
+        allowed_courses = data["allowed_courses"]
+        print(f"allowed_courses : {allowed_courses}")
+        title_filter = {"course_title": {"$in": allowed_courses}}
+        retriever2 = jsonstore.as_retriever(search_type="mmr", search_kwargs={'k': 10, 'filter': title_filter})
+        breakpoint()
+        return retriever2.invoke(query)
+
+    pipeline = RunnableSequence(
+        RunnableLambda(first_step),
+        RunnableLambda(second_step)
+    )
+
+    result = pipeline.invoke("I want to study about machine learning")
+    print(result)
+
     
-    retrievers = RunnableMap({
-    "course_info": lambda x: retriever1.invoke(str(x["question"])),
-    "schedule_info": lambda x: retriever2.invoke(str(x["question"]))
-})
+    
+#     retrievers = RunnableMap({
+#     "course_info": lambda x: retriever1.invoke(str(x["question"])),
+#     "schedule_info": lambda x: retriever2.invoke(str(x["question"]))
+# })
     
     
     

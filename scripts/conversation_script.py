@@ -48,15 +48,19 @@ def main():
     mistral_model = args.model_name
 
     print("Loading Mistral model...")
-    llm_pipe = load_mistral_pipeline(mistral_model)
+    # llm_pipe = load_mistral_pipeline(mistral_model)
 
     print("Loading vector store...")
     vectorstore = load_vectorstore(pdf_vector_path, embedding_model)
     retriever1 = vectorstore.as_retriever(search_type="mmr")
 
+    print(retriever1.invoke("Course related to Algorigthm"))
+
     jsonstore = load_jsonstore(json_vector_path, embedding_model)
     retriever2 = jsonstore.as_retriever(search_type="mmr")
 
+    print(retriever2.invoke("Course related to Algorigthm"))
+    
     retrievers = RunnableMap({
     "course_info": lambda x: retriever1.invoke(str(x["question"])),
     "schedule_info": lambda x: retriever2.invoke(str(x["question"]))
@@ -70,45 +74,45 @@ def main():
          "Relevant Course Info:\n{course_info}\n\n"
          "Relevant Schedule Info:\n{schedule_info}"),
         MessagesPlaceholder("chat_history"),
-        ("human", "My question is: {question}\nPlease answer.")
+        ("human", "My question is: {question}\nPlease answer only based on context.")
     ])
     
-    llm_chain = prompt | llm_pipe 
+    # llm_chain = prompt | llm_pipe 
     
 
     chat_history = []
 
-    while True:
-        user_input = input("\n💬 User: ")
+    # while True:
+    #     user_input = input("\n💬 User: ")
     
-        if user_input.lower() in ["exit", "quit"]:
-            print("👋 대화를 종료합니다.")
-            break
+    #     if user_input.lower() in ["exit", "quit"]:
+    #         print("👋 대화를 종료합니다.")
+    #         break
 
         
-        context_docs = retrievers.invoke({"question": user_input})
-        docs_formatted = {
-            "course_info": "\n".join([str(doc.page_content) for doc in context_docs["course_info"]]),
-            "schedule_info": "\n".join([str(doc.page_content) for doc in context_docs["schedule_info"]]),
-        }
+    #     context_docs = retrievers.invoke({"question": user_input})
+    #     docs_formatted = {
+    #         "course_info": "\n".join([str(doc.page_content) for doc in context_docs["course_info"]]),
+    #         "schedule_info": "\n".join([str(doc.page_content) for doc in context_docs["schedule_info"]]),
+    #     }
     
       
-        prompt_text = prompt.format(
-        chat_history=chat_history,
-        question=user_input,
-        **docs_formatted
-        )
-        print("✅ LLM response received!")
+    #     prompt_text = prompt.format(
+    #     chat_history=chat_history,
+    #     question=user_input,
+    #     **docs_formatted
+    #     )
+    #     print("✅ LLM response received!")
     
-        # LLM pipeline 실행
-        response_text = llm_pipe(prompt_text)[0]["generated_text"]
-        print("\n🤖 LLM:", response_text)
+    #     # LLM pipeline 실행
+    #     response_text = llm_pipe(prompt_text)[0]["generated_text"]
+    #     print("\n🤖 LLM:", response_text)
     
-        # 히스토리 업데이트
-        chat_history.extend([
-            HumanMessage(content=user_input),
-            AIMessage(content=response_text)
-        ])
+    #     # 히스토리 업데이트
+    #     chat_history.extend([
+    #         HumanMessage(content=user_input),
+    #         AIMessage(content=response_text)
+    #     ])
 
 
 if __name__ == "__main__":

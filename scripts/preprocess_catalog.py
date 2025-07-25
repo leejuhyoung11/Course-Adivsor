@@ -36,6 +36,7 @@ def parse_courses_by_hours_line(text) -> list[Document]:
                     page_content=full_text,
                     metadata={
                         "title_line": current_title,
+                        "course_title": current_title.split(". ")[1].strip().rstrip("."),
                         "prerequisite": prereq
                     }
                 ))
@@ -58,6 +59,7 @@ def parse_courses_by_hours_line(text) -> list[Document]:
             page_content=full_text,
             metadata={
                 "title_line": current_title,
+                "course_title": current_title.split(". ")[1].strip().rstrip("."),
                 "prerequisite": prereq
             }
         ))

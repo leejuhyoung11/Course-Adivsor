@@ -30,7 +30,8 @@ def main():
     docs = [
     Document(
         page_content=format_course_text(course),
-        metadata={"course_code": course["course_number"]}
+        metadata={"course_code": course["course_number"],
+                 "course_title": course["title"]}
         )
         for course in course_data
     ]

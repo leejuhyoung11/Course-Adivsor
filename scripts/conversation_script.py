@@ -60,7 +60,6 @@ def main():
     def first_step(query):
         docs = retriever1.invoke(query)
         allowed_courses = [doc.metadata["course_title"] for doc in docs]
-        # print(f"allowedcourse : {allowed_courses}")
         return {"docs": docs, "allowed_courses": allowed_courses, "query":query}
 
     def second_step(data):

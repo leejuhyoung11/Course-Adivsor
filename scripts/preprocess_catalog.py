@@ -17,7 +17,7 @@ def parse_courses_by_hours_line(text) -> list[Document]:
     current_title = None
     current_desc = []
 
-    pattern = re.compile(r"\((\d+(?:-\d+)? Hours)\)")
+    pattern = re.compile(r"\((\d+(?:-\d+)? Hours)\)") 
 
     for line in lines:
         line = line.strip().replace("\xa0", " ")
